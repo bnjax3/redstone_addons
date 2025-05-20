@@ -1,0 +1,14 @@
+{
+    "required": true,
+    "minVersion": "0.8",
+    "package": "org.bnjax3.redstone_addons.mixin",
+    "compatibilityLevel": "JAVA_8",
+    "refmap": "redstone_addons.refmap.json",
+    "mixins": [
+    ],
+    "client": [
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "TCT",
+        " S ",
+        " S "
+    ],
+    "key": {
+        "C": {
+            "item": "test:cock_block"
+        },
+        "S": {
+            "item": "minecraft:stick"
+        },
+        "T": {
+            "item": "test:test_item"
+        }
+    },
+    "result": {
+        "item": "test:cock_staff"
+    }
+}
