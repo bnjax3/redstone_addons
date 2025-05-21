@@ -2,20 +2,22 @@
     "category": "redstone",
     "type": "minecraft:crafting_shaped",
     "pattern": [
-        "###",
+        "#P#",
         "#I#",
         "#R#"
     ],
     "key": {
-        "#": [
-            "minecraft:stone",
-            "minecraft:cobblestone"
-        ],
+        "#": {
+            "item": "minecraft:cobblestone"
+        },
         "R": {
             "item": "minecraft:redstone_dust"
         },
         "P": {
             "item": "minecraft:piston"
+        },
+        "I": {
+            "item": "minecraft:iron_ingot"
         }
     },
     "result": {

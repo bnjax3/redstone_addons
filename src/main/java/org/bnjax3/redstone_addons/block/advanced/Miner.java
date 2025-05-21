@@ -1,5 +1,5 @@
 package org.bnjax3.redstone_addons.block.advanced;
-
+import net.minecraftforge.common.Tags;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DirectionalBlock;
