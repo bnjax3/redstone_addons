@@ -1,5 +1,4 @@
 {
-    "category": "redstone",
     "type": "minecraft:crafting_shaped",
     "pattern": [
         "#P#",
@@ -8,16 +7,16 @@
     ],
     "key": {
         "#": {
-            "item": "minecraft:cobblestone"
+            "tag": "forge:cobblestone"
         },
         "R": {
-            "item": "minecraft:redstone_dust"
+            "item": "minecraft:redstone"
         },
         "P": {
             "item": "minecraft:piston"
         },
         "I": {
-            "item": "minecraft:iron_ingot"
+            "tag": "forge:ingots/iron"
         }
     },
     "result": {

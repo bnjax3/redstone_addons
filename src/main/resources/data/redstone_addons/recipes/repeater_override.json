@@ -1,7 +1,7 @@
 {
     "type": "minecraft:crafting_shaped",
     "pattern": [
-        "TTT",
+        "   ",
         "#X#",
         "#R#"
     ],
@@ -12,15 +12,11 @@
         "#": {
             "tag": "forge:cobblestone"
         },
-        "T": {
-            "tag": "minecraft:planks"
-        },
         "X": {
-            "tag": "forge:ingots/iron"
+            "item": "minecraft:string"
         }
     },
     "result": {
-        "item": "minecraft:piston",
-        "count": 2
+        "item": "minecraft:dispenser"
     }
 }
