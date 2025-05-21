@@ -1,6 +1,7 @@
 {
     "type": "minecraft:crafting_shaped",
     "pattern": [
+        " # ",
         "#X#",
         "III"
     ],
@@ -9,14 +10,14 @@
             "item": "minecraft:redstone_torch"
         },
         "X": {
-            "item": "minecraft:redstone"
+            "item": "minecraft:quartz"
         },
         "I": {
-            "tag": "forge:stone"
+            "item": "forge:stone"
         }
     },
     "result": {
-        "item": "minecraft:repeater",
+        "item": "minecraft:comparator",
         "count": 2
     }
 }
