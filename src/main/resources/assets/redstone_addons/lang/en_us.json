@@ -1,0 +1,5 @@
+{
+    "item.redstone_addons.test_item": "Test Item",
+    "block.redstone_addons.miner": "Miner",
+    "itemGroup.Redstone_addons": "Redstone Addons"
+}
