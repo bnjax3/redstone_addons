@@ -5,6 +5,7 @@ import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
@@ -22,27 +23,32 @@ public class Miner extends DirectionalBlock {
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     @Override
     public void tick(BlockState blockState, ServerWorld serverWorld, BlockPos pos, Random random) {
-        serverWorld.getBlockState().
-        if (blockState.getValue(POWERED))
+        if (!serverWorld.isClientSide() && blockState.getValue(POWERED))
         {
-            damageBlockFacing();
+            breakBlock(getBlockFacing(pos, blockState.getValue(FACING), serverWorld), serverWorld);
         }
         super.tick(blockState, serverWorld, pos, random);
     }
 
-    public BlockState rotate(BlockState p_185499_1_, Rotation p_185499_2_) {
-        return p_185499_1_.setValue(FACING, p_185499_2_.rotate(p_185499_1_.getValue(FACING)));
+    public BlockState rotate(BlockState blockState, Rotation rotation) {
+        return blockState.setValue(FACING, rotation.rotate(blockState.getValue(FACING)));
     }
 
-    public BlockState mirror(BlockState p_185471_1_, Mirror p_185471_2_) {
-        return p_185471_1_.rotate(p_185471_2_.getRotation(p_185471_1_.getValue(FACING)));
+    public BlockState mirror(BlockState blockState, Mirror mirror) {
+        return blockState.rotate(mirror.getRotation(blockState.getValue(FACING)));
     }
 
     public BlockState getStateForPlacement(BlockItemUseContext p_196258_1_) {
         return this.defaultBlockState().setValue(FACING, p_196258_1_.getNearestLookingDirection().getOpposite());
     }
 
-    public void damageBlockFacing(){
+    public static BlockPos getBlockFacing(BlockPos pos, Direction direction, World world)
+    {
+        
+        BlockPos facingBlockPosition =
+        return facingBlockPosition;
+    }
+    public void breakBlock(BlockPos blockPos, World world){
 
     }
 }
