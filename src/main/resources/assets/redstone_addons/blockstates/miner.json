@@ -1,5 +1,26 @@
 {
     "variants": {
-        "": { "model":  "redstone_addons:block/miner"}
+        "facing=down": {
+            "model": "redstone_addons:block/miner_vertical",
+            "x": 180
+        },
+        "facing=east": {
+            "model": "redstone_addons:block/miner",
+            "y": 90
+        },
+        "facing=north": {
+            "model": "redstone_addons:block/miner"
+        },
+        "facing=south": {
+            "model": "redstone_addons:block/miner",
+            "y": 180
+        },
+        "facing=up": {
+            "model": "redstone_addons:block/miner_vertical"
+        },
+        "facing=west": {
+            "model": "redstone_addons:block/miner",
+            "y": 270
+        }
     }
 }

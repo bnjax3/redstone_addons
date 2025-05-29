@@ -11,6 +11,7 @@ import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.bnjax3.redstone_addons.Redstone_addons;
+import org.bnjax3.redstone_addons.block.advanced.Miner;
 import org.bnjax3.redstone_addons.item.ModItemGroup;
 import org.bnjax3.redstone_addons.item.ModItems;
 
@@ -19,7 +20,7 @@ import java.util.function.Supplier;
 public class ModBlocks {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, Redstone_addons.MOD_ID);
 
-    public static final RegistryObject<Block> MINER_BLOCK = registerBlock("miner", () -> new Block(AbstractBlock.Properties.of(Material.METAL).harvestTool(ToolType.PICKAXE).strength(2f).harvestLevel(1)));
+    public static final RegistryObject<Block> MINER_BLOCK = registerBlock("miner", () -> new Miner(AbstractBlock.Properties.of(Material.METAL).harvestTool(ToolType.PICKAXE).strength(2f).harvestLevel(1)));
 
 
     private static <T extends Block>RegistryObject<T> registerBlock(String name, Supplier<T> block)

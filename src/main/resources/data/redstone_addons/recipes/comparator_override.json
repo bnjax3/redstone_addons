@@ -13,7 +13,7 @@
             "item": "minecraft:quartz"
         },
         "I": {
-            "item": "forge:stone"
+            "tag": "forge:stone"
         }
     },
     "result": {
