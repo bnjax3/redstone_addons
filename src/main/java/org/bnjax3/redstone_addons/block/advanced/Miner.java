@@ -8,7 +8,9 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ToolItem;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
@@ -149,10 +151,10 @@ public class Miner extends DirectionalBlock {
             boolean isNeighborPowered = world.hasNeighborSignal(blockPos) || world.hasNeighborSignal(blockPos.above());
 
             if (!isPowered && isNeighborPowered) {
-                world.setBlock(blockPos, blockState.setValue(POWERED, Boolean.TRUE), 4);
+                blockState.setValue(POWERED, Boolean.FALSE);
                 world.getBlockTicks().scheduleTick(blockPos, this, 4);
             } else if (isPowered && !isNeighborPowered){
-                world.setBlock(blockPos, blockState.setValue(POWERED, Boolean.FALSE), 4);
+                blockState.setValue(POWERED, Boolean.FALSE);
             }
 
         }
@@ -187,7 +189,7 @@ public class Miner extends DirectionalBlock {
             } catch (Exception e) {
                 isBlockWaterlogged = false;
             }
-            if (shouldBeAbleToBreakBlockAndDrop(storedItemForReading, blockState))
+            if (!shouldBeAbleToBreakBlockAndDrop(storedItemForReading, blockState))
             {
                 System.out.println("la herramienta no puede romper el bloque");
                 return;
@@ -203,10 +205,21 @@ public class Miner extends DirectionalBlock {
     }
 
     public static boolean shouldBeAbleToBreakBlockAndDrop(ItemStack itemStack, BlockState blockState){
-        Object[] toolTypes = itemStack.getToolTypes().toArray();
-        if (blockState.getHarvestLevel() <= itemStack.getItem().getToolTypes().contains(ToolType.PICKAXE))
-        {
-
+        ToolType toolTypeNeeded = blockState.getHarvestTool();
+        Item item = itemStack.getItem();
+        if (item instanceof ToolItem){
+            System.out.println("el item es una herramienta");
+            System.out.println(blockState.getHarvestLevel());
+            System.out.println(((ToolItem) item).getTier().getLevel());
+            System.out.println(itemStack.getItem().getToolTypes(itemStack).contains(toolTypeNeeded));
+            if (blockState.getHarvestLevel() <= ((ToolItem) item).getTier().getLevel() && itemStack.getItem().getToolTypes(itemStack).contains(toolTypeNeeded))
+            {
+                return true;
+            }
+        } else if (!blockState.requiresCorrectToolForDrops()) {
+            System.out.println("el item no es una herramienta");
+            return true;
         }
+        return false;
     }
 }
