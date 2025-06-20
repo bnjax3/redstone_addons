@@ -53,6 +53,11 @@ public class Miner extends DirectionalBlock {
     }
 
     @Override
+    public PushReaction getPistonPushReaction(BlockState p_149656_1_) {
+        return PushReaction.NORMAL;
+    }
+
+    @Override
     @SuppressWarnings("deprecation")
     @ParametersAreNonnullByDefault
     public ActionResultType use(BlockState blockState, World world, BlockPos blockPos, PlayerEntity player, Hand hand, BlockRayTraceResult blockRayTraceResult) {
@@ -65,12 +70,15 @@ public class Miner extends DirectionalBlock {
                 }
                 boolean isHandEmpty = itemInHand == ItemStack.EMPTY;
                 boolean isBlockEmpty = ((MinerTile)tileEntity).getTool() == ItemStack.EMPTY;
-
+                System.out.println(itemInHand);
+                System.out.println(((MinerTile) tileEntity).getTool());
                 if (!isHandEmpty && isBlockEmpty) {
+                    System.out.println("store item");
                     ((MinerTile) tileEntity).setTool(itemInHand);
                     player.setItemInHand(hand, ItemStack.EMPTY);
                     world.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(), SoundEvents.ARMOR_EQUIP_GENERIC, SoundCategory.BLOCKS, 1.0F, 1.0F);
                 } else if (isHandEmpty && !isBlockEmpty) {
+                    System.out.println("get item");
                     player.setItemInHand(hand, ((MinerTile) tileEntity).getTool());
                     ((MinerTile) tileEntity).setTool(ItemStack.EMPTY);
                     world.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(), SoundEvents.ARMOR_EQUIP_GENERIC, SoundCategory.BLOCKS, 1.0F, 1.0F);
@@ -100,10 +108,10 @@ public class Miner extends DirectionalBlock {
 
         TileEntity tileEntity = serverWorld.getBlockEntity(pos);
         blockPosOfBlockToBreak = getBlockPosOfFacingBlock(pos, blockState.getValue(FACING));
-        System.out.println(blockPosOfBlockToBreak);
+
         if (tileEntity instanceof MinerTile) {
             try {
-                if (serverWorld.getBlockState(blockPosOfBlockToBreak).getMaterial() != Material.AIR) {
+                if (!serverWorld.getBlockState(blockPosOfBlockToBreak).getMaterial().isReplaceable()) {
                     serverWorld.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.DISPENSER_DISPENSE, SoundCategory.BLOCKS, 0.5F, 0.5F);
                     breakBlockWithItem(blockPosOfBlockToBreak, serverWorld, (MinerTile) tileEntity);
                 } else {
@@ -191,7 +199,6 @@ public class Miner extends DirectionalBlock {
             }
             if (!shouldBeAbleToBreakBlockAndDrop(storedItemForReading, blockState))
             {
-                System.out.println("la herramienta no puede romper el bloque");
                 return;
             }
             Block.dropResources(blockState, world, blockPos);
@@ -207,19 +214,28 @@ public class Miner extends DirectionalBlock {
     public static boolean shouldBeAbleToBreakBlockAndDrop(ItemStack itemStack, BlockState blockState){
         ToolType toolTypeNeeded = blockState.getHarvestTool();
         Item item = itemStack.getItem();
-        if (item instanceof ToolItem){
-            System.out.println("el item es una herramienta");
+        if (item instanceof ToolItem && blockState.requiresCorrectToolForDrops() && !isToolAboutToBreak(itemStack)){
+            System.out.println("el item si es una herramienta y no se va a romper");
             System.out.println(blockState.getHarvestLevel());
             System.out.println(((ToolItem) item).getTier().getLevel());
             System.out.println(itemStack.getItem().getToolTypes(itemStack).contains(toolTypeNeeded));
             if (blockState.getHarvestLevel() <= ((ToolItem) item).getTier().getLevel() && itemStack.getItem().getToolTypes(itemStack).contains(toolTypeNeeded))
             {
                 return true;
+            } else {
+                System.out.println("la herramienta no es lo suficientemente fuerte");
             }
         } else if (!blockState.requiresCorrectToolForDrops()) {
-            System.out.println("el item no es una herramienta");
             return true;
         }
         return false;
+    }
+
+    private static boolean isToolAboutToBreak(ItemStack itemStack){
+        int damage = itemStack.getDamageValue();
+        int maxDamage = itemStack.getMaxDamage();
+        System.out.println(damage);
+        System.out.println(maxDamage);
+        return !(damage < (maxDamage - 1));
     }
 }

@@ -3,6 +3,7 @@ package org.bnjax3.redstone_addons.tileentity;
 import net.minecraft.block.BlockState;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ToolItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -78,11 +79,13 @@ public class MinerTile extends TileEntity {
     public void damageTool() {
         // only use toolInstance for read
         ItemStack toolInstance = itemStackHandler.getStackInSlot(0);
-        int damage = toolInstance.getDamageValue();
-        if (toolInstance.isDamageableItem() && damage > 0) {
-            itemStackHandler.getStackInSlot(0).setDamageValue(damage + 1);
-        } else if (damage == 0) {
-            itemStackHandler.setStackInSlot(0, ItemStack.EMPTY);
+        System.out.println(toolInstance);
+        if (toolInstance.getItem() instanceof ToolItem) {
+            int damage = toolInstance.getDamageValue();
+            System.out.println(damage);
+            if (toolInstance.isDamageableItem() && damage < toolInstance.getMaxDamage() + 1) {
+                itemStackHandler.getStackInSlot(0).setDamageValue(damage + 1);
+            }
         }
     }
 

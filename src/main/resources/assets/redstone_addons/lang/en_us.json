@@ -1,5 +1,7 @@
 {
     "item.redstone_addons.test_item": "Test Item",
     "block.redstone_addons.miner": "Miner",
+    "block.redstone_addons.modular_piston": "Modular Piston",
+    "block.redstone_addons.modular_sticky_piston": "Modular Sticky Piston",
     "itemGroup.Redstone_addons": "Redstone Addons"
 }
