@@ -22,6 +22,8 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import org.bnjax3.redstone_addons.block.advanced.idkwhattodowithwhis.ModularPistonStructureHelper;
+import org.bnjax3.redstone_addons.block.advanced.idkwhattodowithwhis.MovingModularPiston;
 
 import java.util.List;
 import java.util.Map;
@@ -92,29 +94,6 @@ public class ModularPiston extends DirectionalBlock {
     }
 
     private void checkIfExtend(World world, BlockPos blockPos, BlockState blockState) {
-        Direction direction = blockState.getValue(FACING);
-        boolean shouldExtend = this.getNeighborSignal(world, blockPos, direction);
-        boolean isExtended = blockState.getValue(EXTENDED);
-        if (shouldExtend && !isExtended) {
-            if ((new PistonBlockStructureHelper(world, blockPos, direction, true)).resolve()) {
-                world.blockEvent(blockPos, this, 0, direction.get3DDataValue());
-            }
-        } else if (!shouldExtend && isExtended) {
-            BlockPos blockpos = blockPos.relative(direction, 2);
-            BlockState blockstate = world.getBlockState(blockpos);
-            int i = 1;
-            if (blockstate.is(Blocks.MOVING_PISTON) && blockstate.getValue(FACING) == direction) {
-                TileEntity tileentity = world.getBlockEntity(blockpos);
-                if (tileentity instanceof PistonTileEntity) {
-                    PistonTileEntity pistontileentity = (PistonTileEntity)tileentity;
-                    if (pistontileentity.isExtending() && (pistontileentity.getProgress(0.0F) < 0.5F || world.getGameTime() == pistontileentity.getLastTicked() || ((ServerWorld)world).isHandlingTick())) {
-                        i = 2;
-                    }
-                }
-            }
-
-            world.blockEvent(blockPos, this, i, direction.get3DDataValue());
-        }
 
     }
 
@@ -169,9 +148,9 @@ public class ModularPiston extends DirectionalBlock {
                 ((PistonTileEntity)tileentity1).finalTick();
             }
 
-            BlockState blockstate = Blocks.MOVING_PISTON.defaultBlockState().setValue(MovingPistonBlock.FACING, direction).setValue(MovingPistonBlock.TYPE, this.isSticky ? PistonType.STICKY : PistonType.DEFAULT);
+            BlockState blockstate = Blocks.MOVING_PISTON.defaultBlockState().setValue(MovingModularPiston.FACING, direction).setValue(MovingModularPiston.TYPE, this.isSticky ? PistonType.STICKY : PistonType.DEFAULT);
             world.setBlock(blockPos, blockstate, 20);
-            world.setBlockEntity(blockPos, MovingPistonBlock.newMovingBlockEntity(this.defaultBlockState().setValue(FACING, Direction.from3DDataValue(j & 7)), direction, false, true));
+            world.setBlockEntity(blockPos, MovingModularPiston.newMovingBlockEntity(this.defaultBlockState().setValue(FACING, Direction.from3DDataValue(j & 7)), direction, false, true));
             world.blockUpdated(blockPos, blockstate.getBlock());
             blockstate.updateNeighbourShapes(world, blockPos, 2);
             if (this.isSticky) {
@@ -250,12 +229,12 @@ public class ModularPiston extends DirectionalBlock {
             world.setBlock(blockpos, Blocks.AIR.defaultBlockState(), 20);
         }
 
-        PistonBlockStructureHelper pistonblockstructurehelper = new PistonBlockStructureHelper(world, blockPos, direction1, extending);
-        if (!pistonblockstructurehelper.resolve()) {
+        ModularPistonStructureHelper structureHelper = new ModularPistonStructureHelper(world, blockPos, direction1, extending);
+        if (!structureHelper.resolve()) {
             return false;
         } else {
             Map<BlockPos, BlockState> mapToPush = Maps.newHashMap();
-            List<BlockPos> blockPosToPush = pistonblockstructurehelper.getToPush();
+            List<BlockPos> blockPosToPush = structureHelper.getToPush();
             List<BlockState> blockStatesToPush = Lists.newArrayList();
 
             // this for fills the blockStatesToPush list
@@ -267,7 +246,7 @@ public class ModularPiston extends DirectionalBlock {
             }
 
 
-            List<BlockPos> blockPosesToDestroy = pistonblockstructurehelper.getToDestroy();
+            List<BlockPos> blockPosesToDestroy = structureHelper.getToDestroy();
             BlockState[] blockStatesToDestroy = new BlockState[blockPosToPush.size() + blockPosesToDestroy.size()];
             Direction absoluteDirection = extending ? direction1 : direction1.getOpposite();
             int j = 0;
@@ -289,17 +268,17 @@ public class ModularPiston extends DirectionalBlock {
                 blockpos3 = blockpos3.relative(absoluteDirection);
                 mapToPush.remove(blockpos3);
                 world.setBlock(blockpos3, Blocks.MOVING_PISTON.defaultBlockState().setValue(FACING, direction1), 68);
-                world.setBlockEntity(blockpos3, MovingPistonBlock.newMovingBlockEntity(blockStatesToPush.get(l), direction1, extending, false));
+                world.setBlockEntity(blockpos3, MovingModularPiston.newMovingBlockEntity(blockStatesToPush.get(l), direction1, extending, false));
                 blockStatesToDestroy[j++] = blockstate5;
             }
             // ?????
             if (extending) {
                 PistonType pistonType = this.isSticky ? PistonType.STICKY : PistonType.DEFAULT;
                 BlockState pistonHeadBlockstate = Blocks.PISTON_HEAD.defaultBlockState().setValue(PistonHeadBlock.FACING, direction1).setValue(PistonHeadBlock.TYPE, pistonType);
-                BlockState movingPistonBlockstate = Blocks.MOVING_PISTON.defaultBlockState().setValue(MovingPistonBlock.FACING, direction1).setValue(MovingPistonBlock.TYPE, this.isSticky ? PistonType.STICKY : PistonType.DEFAULT);
+                BlockState MovingPistonBlockstate = Blocks.MOVING_PISTON.defaultBlockState().setValue(MovingModularPiston.FACING, direction1).setValue(MovingModularPiston.TYPE, this.isSticky ? PistonType.STICKY : PistonType.DEFAULT);
                 mapToPush.remove(blockpos);
-                world.setBlock(blockpos, movingPistonBlockstate, 68);
-                world.setBlockEntity(blockpos, MovingPistonBlock.newMovingBlockEntity(pistonHeadBlockstate, direction1, true, true));
+                world.setBlock(blockpos, MovingPistonBlockstate, 68);
+                world.setBlockEntity(blockpos, MovingModularPiston.newMovingBlockEntity(pistonHeadBlockstate, direction1, true, true));
             }
 
             BlockState airBlockstate = Blocks.AIR.defaultBlockState();
@@ -339,27 +318,27 @@ public class ModularPiston extends DirectionalBlock {
         }
     }
 
-    public BlockState rotate(BlockState p_185499_1_, Rotation p_185499_2_) {
-        return p_185499_1_.setValue(FACING, p_185499_2_.rotate(p_185499_1_.getValue(FACING)));
+    public BlockState rotate(BlockState blockState, Rotation rotation) {
+        return blockState.setValue(FACING, rotation.rotate(blockState.getValue(FACING)));
     }
 
     public BlockState rotate(BlockState state, net.minecraft.world.IWorld world, BlockPos pos, Rotation direction) {
         return state.getValue(EXTENDED) ? state : super.rotate(state, world, pos, direction);
     }
 
-    public BlockState mirror(BlockState p_185471_1_, Mirror p_185471_2_) {
-        return p_185471_1_.rotate(p_185471_2_.getRotation(p_185471_1_.getValue(FACING)));
+    public BlockState mirror(BlockState blockState, Mirror mirror) {
+        return blockState.rotate(mirror.getRotation(blockState.getValue(FACING)));
     }
 
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> p_206840_1_) {
-        p_206840_1_.add(FACING, EXTENDED);
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+        builder.add(FACING, EXTENDED);
     }
 
-    public boolean useShapeForLightOcclusion(BlockState p_220074_1_) {
-        return p_220074_1_.getValue(EXTENDED);
+    public boolean useShapeForLightOcclusion(BlockState blockState) {
+        return blockState.getValue(EXTENDED);
     }
 
-    public boolean isPathfindable(BlockState p_196266_1_, IBlockReader p_196266_2_, BlockPos p_196266_3_, PathType p_196266_4_) {
+    public boolean isPathfindable(BlockState blockState, IBlockReader iBlockReader, BlockPos blockPos, PathType pathType) {
         return false;
     }
 }

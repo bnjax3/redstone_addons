@@ -65,7 +65,7 @@ public class Miner extends DirectionalBlock {
                 ItemStack itemInHand = player.getItemInHand(hand);
                 TileEntity tileEntity = world.getBlockEntity(blockPos);
                 if (!(tileEntity instanceof MinerTile)){
-                    System.out.println("esto no deberia pasar");
+                    System.out.println("que carajovich esto no deberia pasar");
                     return ActionResultType.PASS;
                 }
                 boolean isHandEmpty = itemInHand == ItemStack.EMPTY;

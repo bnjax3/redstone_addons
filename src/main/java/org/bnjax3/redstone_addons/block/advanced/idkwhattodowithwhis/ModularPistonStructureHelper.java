@@ -1,4 +1,4 @@
-package org.bnjax3.redstone_addons.block.advanced;
+package org.bnjax3.redstone_addons.block.advanced.idkwhattodowithwhis;
 
 import com.google.common.collect.Lists;
 import net.minecraft.block.BlockState;
@@ -21,17 +21,17 @@ public class ModularPistonStructureHelper {
     private final List<BlockPos> toDestroy = Lists.newArrayList();
     private final Direction pistonDirection;
 
-    public ModularPistonStructureHelper(World p_i45664_1_, BlockPos p_i45664_2_, Direction p_i45664_3_, boolean p_i45664_4_) {
-        this.level = p_i45664_1_;
-        this.pistonPos = p_i45664_2_;
-        this.pistonDirection = p_i45664_3_;
-        this.extending = p_i45664_4_;
-        if (p_i45664_4_) {
-            this.pushDirection = p_i45664_3_;
-            this.startPos = p_i45664_2_.relative(p_i45664_3_);
+    public ModularPistonStructureHelper(World world, BlockPos blockPos, Direction direction, boolean extending) {
+        this.level = world;
+        this.pistonPos = blockPos;
+        this.pistonDirection = direction;
+        this.extending = extending;
+        if (extending) {
+            this.pushDirection = direction;
+            this.startPos = blockPos.relative(direction);
         } else {
-            this.pushDirection = p_i45664_3_.getOpposite();
-            this.startPos = p_i45664_2_.relative(p_i45664_3_, 2);
+            this.pushDirection = direction.getOpposite();
+            this.startPos = blockPos.relative(direction, 2);
         }
 
     }
